@@ -10,7 +10,7 @@ Original file is located at
 import streamlit as st
 
 # from streamlit_extras.add_vertical_space import add_vertical_space
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 
 import pandas as pd
@@ -18,12 +18,12 @@ from model import get_price_prediction_model
 from bot import get_latest_signal_and_price
 
 # load the Environment Variables.
-load_dotenv()
+# load_dotenv()
 st.set_page_config(page_title="Crypto Guide")
 
 # Access environment variables
-api_key = os.getenv('API_KEY')
-api_secret = os.getenv('API_SECRET')
+# api_key = os.getenv('API_KEY')
+# api_secret = os.getenv('API_SECRET')
 
 #api_key = os.environ.get(api_key)
 #api_secret = os.environ.get(api_secret)
