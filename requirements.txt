@@ -1,0 +1,7 @@
+streamlit
+streamlit-extras
+python-dotenv
+pandas
+ccxt
+statsmodels
+ratelimit
