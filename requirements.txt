@@ -5,3 +5,4 @@ pandas
 ccxt
 statsmodels
 ratelimit
+yfinance
