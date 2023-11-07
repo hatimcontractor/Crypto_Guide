@@ -15,7 +15,7 @@ import os
 
 import pandas as pd
 from model import get_price_prediction_model
-from tradingbot import run_trading_strategy
+from tradingbot import trading_strategy_sarimax
 
 # load the Environment Variables.
 # load_dotenv()
@@ -58,8 +58,8 @@ def main():
             # Bot crypto trading
             st.subheader("Trading bot 🤖: ")
             with st.form(key='my_form_bot'):
-                signal = run_trading_strategy(symbol='BTC-USD', short_period=12, long_period=26, rsi_period=14)
-                st.write(f"Latest Preferred Option: {signal}")
+                recommendation = trading_strategy_sarimax(symbol='BTC-USD', short_period=12, long_period=26, rsi_period=14)
+                st.write(f"Latest Preferred Option: {recommendation}")
                 okay_button = st.form_submit_button(label='Okay')
     # st.divider()
 
