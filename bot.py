@@ -59,8 +59,3 @@ def run_trading_strategy(symbol='BTC-USD', short_period=12, long_period=26, rsi_
 
     return signal
 
-if __name__ == '__main':
-    recommendation = run_trading_strategy()
-    print(recommendation)
-
-
