@@ -58,7 +58,7 @@ def main():
             # Bot crypto trading
             st.subheader("Trading bot 🤖: ")
             with st.form(key='my_form_bot'):
-                current_signal, current_price = get_latest_signal_and_price(symbol='BTC-USD', short_period=12, long_period=26, signal_period=9, rsi_period=14, rsi_oversold=30, rsi_overbought=70)
+                signal = run_trading_strategy(symbol='BTC-USD', short_period=12, long_period=26, signal_period=9, rsi_period=14, rsi_oversold=30, rsi_overbought=70)
                 st.write(f"Latest Preferred Option: {signal}")
                 okay_button = st.form_submit_button(label='Okay')
     # st.divider()
