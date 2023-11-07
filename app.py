@@ -15,7 +15,7 @@ import os
 
 import pandas as pd
 from model import get_price_prediction_model
-from bot import run_trading_strategy
+from tradingbot import run_trading_strategy
 
 # load the Environment Variables.
 # load_dotenv()
