@@ -2,9 +2,10 @@ import pandas as pd
 import yfinance as yf
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from datetime import datetime
-import numpy as np
 
-def run_trading_strategy(symbol='BTC-USD', short_period=12, long_period=26, rsi_period=14):
+def trading_strategy_sarimax(symbol='BTC-USD', short_period=12, long_period=26, rsi_period=14):
+    recommendation = None  # Initialize the recommendation variable
+
     def fetch_historical_data(symbol, start_date, end_date, interval):
         data = yf.download(symbol, start=start_date, end=end_date, interval=interval)
         return data
@@ -18,7 +19,7 @@ def run_trading_strategy(symbol='BTC-USD', short_period=12, long_period=26, rsi_
     def calculate_rsi(data, rsi_period):
         delta = data['Close'].diff(1)
         gain = delta.where(delta > 0, 0)
-        loss = -delta where(delta < 0, 0)
+        loss = -delta.where(delta < 0, 0)
         avg_gain = gain.rolling(window=rsi_period).mean()
         avg_loss = loss.rolling(window=rsi_period).mean()
         rs = avg_gain / avg_loss
@@ -30,32 +31,31 @@ def run_trading_strategy(symbol='BTC-USD', short_period=12, long_period=26, rsi_
         prediction = model_fit.get_forecast(start=start_date, end=end_date)
         return prediction.predicted_mean
 
-    def trading_strategy(data, short_period, long_period, rsi_period):
-        current_date = data.index[-1]
-        current_data = data.iloc[-1]
-
-        calculate_macd(data, short_period, long_period)
-        calculate_rsi(data, rsi_period)
-
-        if current_data['macd'] > 0 and current_data['rsi'] < 70:
-            sarimax_prediction = load_and_predict_sarimax(data, current_date, current_date)
-            if sarimax_prediction > current_data['Close']:
-                return 'Buy'
-        elif current_data['macd'] < 0 and current_data['rsi'] > 30:
-            sarimax_prediction = load_and_predict_sarimax(data, current_date, current_date)
-            if sarimax_prediction < current_data['Close']:
-                return 'Sell'
-        return 'Hold'
-
-    # Define start and end dates
+    # Define symbol, start date, and end date
     end_date = datetime.now().strftime('%Y-%m-%d')
     start_date = (datetime.now() - pd.DateOffset(days=30)).strftime('%Y-%m-%d')
 
     # Fetch historical data
     historical_data = fetch_historical_data(symbol, start_date, end_date, '1d')
 
-    # Apply trading strategy with custom RSI and MACD functions
-    signal = trading_strategy(historical_data, short_period, long_period, rsi_period)
+    # Calculate MACD and RSI
+    calculate_macd(historical_data, short_period, long_period)
+    calculate_rsi(historical_data, rsi_period)
 
-    return signal
+    # Apply trading strategy with custom RSI and MACD functions
+    current_date = historical_data.index[-1]
+    current_data = historical_data.iloc[-1]
+
+    if current_data['macd'] > 0 and current_data['rsi'] < 70:
+        sarimax_prediction = load_and_predict_sarimax(historical_data, current_date, current_date)
+        if sarimax_prediction > current_data['Close']:
+            recommendation = 'Buy'
+    elif current_data['macd'] < 0 and current_data['rsi'] > 30:
+        sarimax_prediction = load_and_predict_sarimax(historical_data, current_date, current_date)
+        if sarimax_prediction < current_data['Close']:
+            recommendation = 'Sell'
+    else:
+        recommendation = 'Hold'
+
+    return recommendation
 
